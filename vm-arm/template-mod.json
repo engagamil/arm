@@ -104,7 +104,7 @@
         },
         "adminPassword": {
             "type": "secureString",
-            "value": Qwertyuiop1234567890
+            "value": "Qwertyuiop1234567890"
         },
         "diagnosticsStorageAccountName": {
             "type": "string",
