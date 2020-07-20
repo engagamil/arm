@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_arm_vm_name": {
+            "defaultValue": "arm-vm",
+            "type": "String"
+        },
+        "disks_arm_vm_OsDisk_1_68da92562dc94ae7bae8aa6c16c57350_externalid": {
+            "defaultValue": "/subscriptions/68c242ce-c9f6-45d2-b508-f900cc085aaa/resourceGroups/AHMED-CA/providers/Microsoft.Compute/disks/arm-vm_OsDisk_1_68da92562dc94ae7bae8aa6c16c57350",
+            "type": "String"
+        },
+        "networkInterfaces_arm_vm88_externalid": {
+            "defaultValue": "/subscriptions/68c242ce-c9f6-45d2-b508-f900cc085aaa/resourceGroups/ahmed-ca/providers/Microsoft.Network/networkInterfaces/arm-vm88",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_arm_vm_name')]",
+            "location": "eastus",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B1ls"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_arm_vm_name'), '_OsDisk_1_68da92562dc94ae7bae8aa6c16c57350')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS",
+                            "id": "[parameters('disks_arm_vm_OsDisk_1_68da92562dc94ae7bae8aa6c16c57350_externalid')]"
+                        },
+                        "diskSizeGB": 30
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_arm_vm_name')]",
+                    "adminUsername": "ahmed",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_arm_vm88_externalid')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "https://ahmedcadiag.blob.core.windows.net/"
+                    }
+                }
+            }
+        }
+    ]
+}
