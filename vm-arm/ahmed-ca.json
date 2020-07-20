@@ -1,0 +1,674 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkInterfaces_arm_vm88_name": {
+      "type": "String"
+    },
+    "networkInterfaces_jenkins246_name": {
+      "type": "String"
+    },
+    "networkSecurityGroups_arm_vm_nsg_name": {
+      "type": "String"
+    },
+    "networkSecurityGroups_jenkins_nsg_name": {
+      "type": "String"
+    },
+    "publicIPAddresses_arm_vm_ip_name": {
+      "type": "String"
+    },
+    "publicIPAddresses_jenkins_ip_name": {
+      "type": "String"
+    },
+    "schedules_shutdown_computevm_arm_vm_name": {
+      "type": "String"
+    },
+    "schedules_shutdown_computevm_jenkins_name": {
+      "type": "String"
+    },
+    "storageAccounts_ahmedcadiag_name": {
+      "type": "String"
+    },
+    "virtualMachines_arm_vm_name": {
+      "type": "String"
+    },
+    "virtualMachines_jenkins_name": {
+      "type": "String"
+    },
+    "virtualNetworks_ahmed_ca_vnet_name": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2020-05-01",
+      "location": "eastus",
+      "name": "[parameters('networkSecurityGroups_arm_vm_nsg_name')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "SSH",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "22",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 300,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            }
+          }
+        ]
+      },
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "location": "eastus",
+      "name": "[parameters('networkSecurityGroups_jenkins_nsg_name')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "Jenkins",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "8080",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 1010,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            }
+          },
+          {
+            "name": "HTTP",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "80",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 1020,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            }
+          },
+          {
+            "name": "HTTPS",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "443",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 1030,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            }
+          },
+          {
+            "name": "default-allow-ssh",
+            "properties": {
+              "access": "Allow",
+              "destinationAddressPrefix": "*",
+              "destinationAddressPrefixes": [],
+              "destinationPortRange": "22",
+              "destinationPortRanges": [],
+              "direction": "Inbound",
+              "priority": 1040,
+              "protocol": "TCP",
+              "sourceAddressPrefix": "*",
+              "sourceAddressPrefixes": [],
+              "sourcePortRange": "*",
+              "sourcePortRanges": []
+            }
+          }
+        ]
+      },
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "location": "eastus",
+      "name": "[parameters('publicIPAddresses_arm_vm_ip_name')]",
+      "properties": {
+        "idleTimeoutInMinutes": 4,
+        "ipAddress": "40.85.187.66",
+        "ipTags": [],
+        "publicIPAddressVersion": "IPv4",
+        "publicIPAllocationMethod": "Dynamic"
+      },
+      "sku": {
+        "name": "Basic"
+      },
+      "type": "Microsoft.Network/publicIPAddresses"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "location": "eastus",
+      "name": "[parameters('publicIPAddresses_jenkins_ip_name')]",
+      "properties": {
+        "idleTimeoutInMinutes": 4,
+        "ipAddress": "137.135.121.106",
+        "ipTags": [],
+        "publicIPAddressVersion": "IPv4",
+        "publicIPAllocationMethod": "Static"
+      },
+      "sku": {
+        "name": "Basic"
+      },
+      "type": "Microsoft.Network/publicIPAddresses"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "location": "eastus",
+      "name": "[parameters('virtualNetworks_ahmed_ca_vnet_name')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/24"
+          ]
+        },
+        "enableDdosProtection": false,
+        "enableVmProtection": false,
+        "subnets": [
+          {
+            "name": "default",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24",
+              "delegations": [],
+              "privateEndpointNetworkPolicies": "Enabled",
+              "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+          }
+        ],
+        "virtualNetworkPeerings": []
+      },
+      "type": "Microsoft.Network/virtualNetworks"
+    },
+    {
+      "apiVersion": "2019-06-01",
+      "kind": "Storage",
+      "location": "eastus",
+      "name": "[parameters('storageAccounts_ahmedcadiag_name')]",
+      "properties": {
+        "encryption": {
+          "keySource": "Microsoft.Storage",
+          "services": {
+            "blob": {
+              "enabled": true,
+              "keyType": "Account"
+            },
+            "file": {
+              "enabled": true,
+              "keyType": "Account"
+            }
+          }
+        },
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "defaultAction": "Allow",
+          "ipRules": [],
+          "virtualNetworkRules": []
+        },
+        "supportsHttpsTrafficOnly": true
+      },
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "type": "Microsoft.Storage/storageAccounts"
+    },
+    {
+      "apiVersion": "2018-09-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_arm_vm_name'))]"
+      ],
+      "location": "eastus",
+      "name": "[parameters('schedules_shutdown_computevm_arm_vm_name')]",
+      "properties": {
+        "dailyRecurrence": {
+          "time": "1900"
+        },
+        "notificationSettings": {
+          "emailRecipient": "eng.agamil@outlook.com",
+          "notificationLocale": "en",
+          "status": "Enabled",
+          "timeInMinutes": 30
+        },
+        "status": "Enabled",
+        "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_arm_vm_name'))]",
+        "taskType": "ComputeVmShutdownTask",
+        "timeZoneId": "Belarus Standard Time"
+      },
+      "type": "microsoft.devtestlab/schedules"
+    },
+    {
+      "apiVersion": "2018-09-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_jenkins_name'))]"
+      ],
+      "location": "eastus",
+      "name": "[parameters('schedules_shutdown_computevm_jenkins_name')]",
+      "properties": {
+        "dailyRecurrence": {
+          "time": "1900"
+        },
+        "notificationSettings": {
+          "emailRecipient": "eng.agamil@outlook.com",
+          "notificationLocale": "en",
+          "status": "Enabled",
+          "timeInMinutes": 30
+        },
+        "status": "Enabled",
+        "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_jenkins_name'))]",
+        "taskType": "ComputeVmShutdownTask",
+        "timeZoneId": "Belarus Standard Time"
+      },
+      "type": "microsoft.devtestlab/schedules"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jenkins_nsg_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_jenkins_nsg_name'), '/default-allow-ssh')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "22",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 1040,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jenkins_nsg_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_jenkins_nsg_name'), '/HTTP')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "80",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 1020,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jenkins_nsg_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_jenkins_nsg_name'), '/HTTPS')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "443",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 1030,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jenkins_nsg_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_jenkins_nsg_name'), '/Jenkins')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "8080",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 1010,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_arm_vm_nsg_name'))]"
+      ],
+      "name": "[concat(parameters('networkSecurityGroups_arm_vm_nsg_name'), '/SSH')]",
+      "properties": {
+        "access": "Allow",
+        "destinationAddressPrefix": "*",
+        "destinationAddressPrefixes": [],
+        "destinationPortRange": "22",
+        "destinationPortRanges": [],
+        "direction": "Inbound",
+        "priority": 300,
+        "protocol": "TCP",
+        "sourceAddressPrefix": "*",
+        "sourceAddressPrefixes": [],
+        "sourcePortRange": "*",
+        "sourcePortRanges": []
+      },
+      "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_ahmed_ca_vnet_name'))]"
+      ],
+      "name": "[concat(parameters('virtualNetworks_ahmed_ca_vnet_name'), '/default')]",
+      "properties": {
+        "addressPrefix": "10.0.0.0/24",
+        "delegations": [],
+        "privateEndpointNetworkPolicies": "Enabled",
+        "privateLinkServiceNetworkPolicies": "Enabled"
+      },
+      "type": "Microsoft.Network/virtualNetworks/subnets"
+    },
+    {
+      "apiVersion": "2019-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ahmedcadiag_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_ahmedcadiag_name'), '/default')]",
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "enabled": false
+        }
+      },
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices"
+    },
+    {
+      "apiVersion": "2019-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ahmedcadiag_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_ahmedcadiag_name'), '/default')]",
+      "properties": {
+        "cors": {
+          "corsRules": []
+        }
+      },
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "type": "Microsoft.Storage/storageAccounts/fileServices"
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_arm_vm88_name'))]",
+        "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_ahmedcadiag_name'))]"
+      ],
+      "location": "eastus",
+      "name": "[parameters('virtualMachines_arm_vm_name')]",
+      "properties": {
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('https://', parameters('storageAccounts_ahmedcadiag_name'), '.blob.core.windows.net/')]"
+          }
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_B1ls"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_arm_vm88_name'))]"
+            }
+          ]
+        },
+        "osProfile": {
+          "adminUsername": "ahmed",
+          "allowExtensionOperations": true,
+          "computerName": "[parameters('virtualMachines_arm_vm_name')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": false,
+            "provisionVMAgent": true
+          },
+          "requireGuestProvisionSignal": true,
+          "secrets": []
+        },
+        "storageProfile": {
+          "dataDisks": [],
+          "imageReference": {
+            "offer": "UbuntuServer",
+            "publisher": "Canonical",
+            "sku": "18.04-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "diskSizeGB": 30,
+            "managedDisk": {
+              "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_arm_vm_name'), '_OsDisk_1_68da92562dc94ae7bae8aa6c16c57350'))]",
+              "storageAccountType": "Standard_LRS"
+            },
+            "name": "[concat(parameters('virtualMachines_arm_vm_name'), '_OsDisk_1_68da92562dc94ae7bae8aa6c16c57350')]",
+            "osType": "Linux"
+          }
+        }
+      },
+      "type": "Microsoft.Compute/virtualMachines"
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_jenkins246_name'))]",
+        "[resourceId('Microsoft.Storage/StorageAccounts', parameters('storageAccounts_ahmedcadiag_name'))]"
+      ],
+      "location": "eastus",
+      "name": "[parameters('virtualMachines_jenkins_name')]",
+      "plan": {
+        "name": "jenkins2222-centos77",
+        "product": "w9jenkins-centos",
+        "publisher": "websoft9inc"
+      },
+      "properties": {
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('https://', parameters('storageAccounts_ahmedcadiag_name'), '.blob.core.windows.net/')]"
+          }
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_B1s"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_jenkins246_name'))]"
+            }
+          ]
+        },
+        "osProfile": {
+          "adminUsername": "ahmed",
+          "allowExtensionOperations": true,
+          "computerName": "[parameters('virtualMachines_jenkins_name')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": false,
+            "provisionVMAgent": true
+          },
+          "requireGuestProvisionSignal": true,
+          "secrets": []
+        },
+        "storageProfile": {
+          "dataDisks": [],
+          "imageReference": {
+            "offer": "[concat('w9', parameters('virtualMachines_jenkins_name'), '-centos')]",
+            "publisher": "websoft9inc",
+            "sku": "[concat(parameters('virtualMachines_jenkins_name'), '2222-centos77')]",
+            "version": "2.222.3"
+          },
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "diskSizeGB": 30,
+            "managedDisk": {
+              "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_jenkins_name'), '_OsDisk_1_21ea8adfad16420da1725290188e73f6'))]",
+              "storageAccountType": "Standard_LRS"
+            },
+            "name": "[concat(parameters('virtualMachines_jenkins_name'), '_OsDisk_1_21ea8adfad16420da1725290188e73f6')]",
+            "osType": "Linux"
+          }
+        }
+      },
+      "type": "Microsoft.Compute/virtualMachines"
+    },
+    {
+      "apiVersion": "2019-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_ahmedcadiag_name'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ahmedcadiag_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_ahmedcadiag_name'), '/default/bootdiagnostics-armvm-8429ce66-0e5f-41f6-a74c-45940540f15e')]",
+      "properties": {
+        "publicAccess": "None"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers"
+    },
+    {
+      "apiVersion": "2019-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_ahmedcadiag_name'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ahmedcadiag_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_ahmedcadiag_name'), '/default/bootdiagnostics-jenkins-2f6b3884-7f8a-4915-8221-cdb84a301d3b')]",
+      "properties": {
+        "publicAccess": "None"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_arm_vm_ip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ahmed_ca_vnet_name'), 'default')]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_arm_vm_nsg_name'))]"
+      ],
+      "location": "eastus",
+      "name": "[parameters('networkInterfaces_arm_vm88_name')]",
+      "properties": {
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false,
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "primary": true,
+              "privateIPAddress": "10.0.0.5",
+              "privateIPAddressVersion": "IPv4",
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_arm_vm_ip_name'))]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ahmed_ca_vnet_name'), 'default')]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_arm_vm_nsg_name'))]"
+        }
+      },
+      "type": "Microsoft.Network/networkInterfaces"
+    },
+    {
+      "apiVersion": "2020-05-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_jenkins_ip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ahmed_ca_vnet_name'), 'default')]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jenkins_nsg_name'))]"
+      ],
+      "location": "eastus",
+      "name": "[parameters('networkInterfaces_jenkins246_name')]",
+      "properties": {
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false,
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "primary": true,
+              "privateIPAddress": "10.0.0.4",
+              "privateIPAddressVersion": "IPv4",
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_jenkins_ip_name'))]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_ahmed_ca_vnet_name'), 'default')]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_jenkins_nsg_name'))]"
+        }
+      },
+      "type": "Microsoft.Network/networkInterfaces"
+    }
+  ],
+  "variables": {}
+}
