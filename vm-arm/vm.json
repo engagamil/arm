@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "disks_jenkins_OsDisk_1_21ea8adfad16420da1725290188e73f6_externalid": {
+      "type": "String"
+    },
+    "networkInterfaces_jenkins246_externalid": {
+      "type": "String"
+    },
+    "virtualMachines_jenkins_name": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2019-07-01",
+      "location": "eastus",
+      "name": "[parameters('virtualMachines_jenkins_name')]",
+      "plan": {
+        "name": "jenkins2222-centos77",
+        "product": "w9jenkins-centos",
+        "publisher": "websoft9inc"
+      },
+      "properties": {
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "https://ahmedcadiag.blob.core.windows.net/"
+          }
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_B1s"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[parameters('networkInterfaces_jenkins246_externalid')]"
+            }
+          ]
+        },
+        "osProfile": {
+          "adminUsername": "ahmed",
+          "allowExtensionOperations": true,
+          "computerName": "[parameters('virtualMachines_jenkins_name')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": false,
+            "provisionVMAgent": true
+          },
+          "requireGuestProvisionSignal": true,
+          "secrets": []
+        },
+        "storageProfile": {
+          "dataDisks": [],
+          "imageReference": {
+            "offer": "[concat('w9', parameters('virtualMachines_jenkins_name'), '-centos')]",
+            "publisher": "websoft9inc",
+            "sku": "[concat(parameters('virtualMachines_jenkins_name'), '2222-centos77')]",
+            "version": "2.222.3"
+          },
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "diskSizeGB": 30,
+            "managedDisk": {
+              "id": "[parameters('disks_jenkins_OsDisk_1_21ea8adfad16420da1725290188e73f6_externalid')]",
+              "storageAccountType": "Standard_LRS"
+            },
+            "name": "[concat(parameters('virtualMachines_jenkins_name'), '_OsDisk_1_21ea8adfad16420da1725290188e73f6')]",
+            "osType": "Linux"
+          }
+        }
+      },
+      "type": "Microsoft.Compute/virtualMachines"
+    }
+  ],
+  "variables": {}
+}
