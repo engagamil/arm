@@ -4,19 +4,19 @@
     "parameters": {
         "location": {
             "type": "string",
-            "value": "eastus"
+            "defaultValue": "eastus"
         },
         "networkInterfaceName": {
             "type": "string",
-            "value": "vm-arm989"
+            "defaultValue": "vm-arm989"
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "value": "vm-arm-nsg"
+            "defaultValue": "vm-arm-nsg"
         },
         "networkSecurityGroupRules": {
             "type": "array",
-            "value": [
+            "defaultValue": [
                 {
                     "name": "SSH",
                     "properties": {
@@ -60,83 +60,83 @@
         },
         "subnetName": {
             "type": "string",
-            "value": "default"
+            "defaultValue": "default"
         },
         "virtualNetworkId": {
             "type": "string",
-            "value": "/subscriptions/68c242ce-c9f6-45d2-b508-f900cc085aaa/resourceGroups/ahmed-ca/providers/Microsoft.Network/virtualNetworks/ahmed-ca-vnet"
+            "defaultValue": "/subscriptions/68c242ce-c9f6-45d2-b508-f900cc085aaa/resourceGroups/ahmed-ca/providers/Microsoft.Network/virtualNetworks/ahmed-ca-vnet"
         },
         "publicIpAddressName": {
             "type": "string",
-            "value": "vm-arm-ip"
+            "defaultValue": "vm-arm-ip"
         },
         "publicIpAddressType": {
             "type": "string",
-            "value": "Dynamic"
+            "defaultValue": "Dynamic"
         },
         "publicIpAddressSku": {
             "type": "string",
-            "value": "Basic"
+            "defaultValue": "Basic"
         },
         "virtualMachineName": {
             "type": "string",
-            "value": "vm-arm"
+            "defaultValue": "vm-arm"
         },
         "virtualMachineComputerName": {
             "type": "string",
-            "value": "vm-arm"
+            "defaultValue": "vm-arm"
         },
         "virtualMachineRG": {
             "type": "string",
-            "value": "ahmed-ca"
+            "defaultValue": "ahmed-ca"
         },
         "osDiskType": {
             "type": "string",
-            "value": "Standard_LRS"
+            "defaultValue": "Standard_LRS"
         },
         "virtualMachineSize": {
             "type": "string",
-            "value": "Standard_B1ls"
+            "defaultValue": "Standard_B1ls"
         },
         "adminUsername": {
             "type": "string",
-            "value": "ahmed"
+            "defaultValue": "ahmed"
         },
         "adminPassword": {
             "type": "secureString",
-            "value": "Qwertyuiop1234567890"
+            "defaultValue": "Qwertyuiop1234567890"
         },
         "diagnosticsStorageAccountName": {
             "type": "string",
-            "value": "ahmedcadiag"
+            "defaultValue": "ahmedcadiag"
         },
         "diagnosticsStorageAccountId": {
             "type": "string",
-            "value": "/subscriptions/68c242ce-c9f6-45d2-b508-f900cc085aaa/resourceGroups/ahmed-ca/providers/Microsoft.Storage/storageAccounts/ahmedcadiag"
+            "defaultValue": "/subscriptions/68c242ce-c9f6-45d2-b508-f900cc085aaa/resourceGroups/ahmed-ca/providers/Microsoft.Storage/storageAccounts/ahmedcadiag"
         },
         "autoShutdownStatus": {
             "type": "string",
-            "value": "Enabled"
+            "defaultValue": "Enabled"
         },
         "autoShutdownTime": {
             "type": "string",
-            "value": "19:00"
+            "defaultValue": "19:00"
         },
         "autoShutdownTimeZone": {
             "type": "string",
-            "value": "Belarus Standard Time"
+            "defaultValue": "Belarus Standard Time"
         },
         "autoShutdownNotificationStatus": {
             "type": "string",
-            "value": "Enabled"
+            "defaultValue": "Enabled"
         },
         "autoShutdownNotificationLocale": {
             "type": "string",
-            "value": "en"
+            "defaultValue": "en"
         },
         "autoShutdownNotificationEmail": {
             "type": "string",
-            "value": "eng.agamil@outlook.com"
+            "defaultValue": "eng.agamil@outlook.com"
         }
     },
     "variables": {
