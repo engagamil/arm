@@ -4,7 +4,7 @@
     "parameters": {
         "location": {
             "type": "string",
-            "defaultValue": "eastus"
+            "defaultValue": "westus"
         },
         "networkInterfaceName": {
             "type": "string",
@@ -80,7 +80,7 @@
         },
         "virtualMachineName": {
             "type": "string",
-            "defaultValue": "vm-arm"
+            "defaultValue": "vm-arm123"
         },
         "virtualMachineComputerName": {
             "type": "string",
